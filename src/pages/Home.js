@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
     View,
     Text,
@@ -7,7 +7,16 @@ import {
     TouchableOpacity
    } from 'react-native';
 
+
 export function Home(){
+
+  const [newSkill, setNewSkill] = useState('');
+  const [mySkills, setMySkill] = useState([]);
+
+  function handleAddNewSkill(){
+    setMySkill(oldState =>[...oldState, newSkill]);
+  }
+
   return(
     <View style={styles.container}>
        <Text style={styles.title}>
@@ -18,11 +27,13 @@ export function Home(){
         style={styles.input}
         placeholder='New Skill'
         placeholderTextColor ='#555'
+        onChangeText={setNewSkill}
        />
 
        <TouchableOpacity
        style={styles.button}
        activeOpacity={.7}
+       onPress={handleAddNewSkill}
        >
          <Text style={styles.buttonText}>
            Adicionar
@@ -33,9 +44,24 @@ export function Home(){
        { /* O modo abaixo de aproveitar estilos de outro
        componente e adicionar os que deseja */ }
 
-       <Text style={[styles.title,{marginTop:50}]}>
-           My Skills
-         </Text>
+       <Text style={[styles.title,{marginVertical:50}]}>
+           My Skills 
+       </Text>
+
+       {
+         mySkills.map(skill => (
+            <TouchableOpacity key={skill}
+              style={styles.buttonSkill}
+              activeOpacity={.7}
+            >
+          <Text style={styles.textSkill}>
+              {skill}
+          </Text>
+       </TouchableOpacity>
+         ))
+        
+       }
+
     </View>
   )
 }
@@ -56,7 +82,7 @@ const styles = StyleSheet.create({
     input:{
       backgroundColor:'#1f1e25',
       color:'#FFF',
-      fontSize:10,
+      fontSize:18,
       padding: Platform.OS == 'ios' ? 15 : 10,
       marginTop:30,
       borderRadius:7,
@@ -73,8 +99,19 @@ const styles = StyleSheet.create({
       color: '#FFF',
       fontSize:17,
       fontWeight:'bold'
-
-    }
+    },
+    buttonSkill:{
+      backgroundColor:'#1f1e25',
+      borderRadius:50,
+      padding: 15,
+      alignItems:'center',
+      marginVertical:10
+    },
+    textSkill:{
+      color: '#FFF',
+      fontSize: 22,
+      fontWeight:'bold'
+    },
 
 
 })
