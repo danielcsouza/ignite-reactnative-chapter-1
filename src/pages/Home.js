@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
     View,
     Text,
     StyleSheet,
-    TextInput
+    TextInput,
+    FlatList,
    } from 'react-native';
 
 import { Button } from '../components/Button';
@@ -14,16 +15,38 @@ export function Home(){
 
   const [newSkill, setNewSkill] = useState('');
   const [mySkills, setMySkill] = useState([]);
+  const [greeting, setGreeting] = useState('');
 
   function handleAddNewSkill(){
     setMySkill(oldState =>[...oldState, newSkill]);
   }
+
+  useEffect(()=>{
+    //console.log('use effect executado')
+    const currentHour = new Date().getHours();
+    console.log(currentHour)
+
+    if (currentHour<12){
+      setGreeting('Bom dia');
+    }else if (currentHour >=12 && currentHour <18){
+      setGreeting('Boa tarde');
+    }
+    else{
+      setGreeting('Boa noite');
+    }
+
+  },[])
+
 
   return(
     <View style={styles.container}>
        <Text style={styles.title}>
          Welcome, Daniel 
       </Text>
+
+      <Text style={styles.greetings}>
+      {greeting}
+       </Text>
 
        <TextInput
         style={styles.input}
@@ -41,11 +64,18 @@ export function Home(){
            My Skills 
        </Text>
 
-       {
-         mySkills.map(skill => (
-          <SkillCard/>
-         ))
-       }
+       
+
+        <FlatList 
+          data={mySkills}
+          keyExtractor={item=>item}
+          renderItem={({item}) => (
+          <SkillCard  key={item} skill={item}/>
+        )}
+       />
+       
+         
+       
 
     </View>
   )
@@ -73,5 +103,8 @@ const styles = StyleSheet.create({
       borderRadius:7,
       marginBottom:20
     },
+    greetings:{
+      color: '#FFF'
+    }
    
 })
