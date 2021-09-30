@@ -10,15 +10,37 @@ import {
 import { Button } from '../components/Button';
 import { SkillCard } from '../components/SkillCard';
 
+interface SkillData{
+  id: string;
+  name: string;
+}
+
 
 export function Home(){
 
   const [newSkill, setNewSkill] = useState('');
-  const [mySkills, setMySkill] = useState([]);
+  const [mySkills, setMySkill] = useState<SkillData[]>([]);
   const [greeting, setGreeting] = useState('');
 
   function handleAddNewSkill(){
-    setMySkill(oldState =>[...oldState, newSkill]);
+    const data ={
+      id: String(new Date().getTime()),
+      name: newSkill
+    }
+
+    setMySkill(oldState =>[...oldState, data]);
+
+    
+  }
+
+  // desafio pessoal implementar o reset form
+  function resetForm(){
+
+  }
+
+
+  function handleRemoveSkill(id: String){
+    setMySkill(oldState => oldState.filter(s=>s.id != id))
   }
 
   useEffect(()=>{
@@ -55,7 +77,10 @@ export function Home(){
         onChangeText={setNewSkill}
        />
 
-       <Button onPress={handleAddNewSkill}/>
+       <Button 
+       onPress={handleAddNewSkill}
+       title="Add"
+       />
 
        { /* O modo abaixo de aproveitar estilos de outro
        componente e adicionar os que deseja */ }
@@ -68,9 +93,12 @@ export function Home(){
 
         <FlatList 
           data={mySkills}
-          keyExtractor={item=>item}
+          keyExtractor={item=>item.id}
           renderItem={({item}) => (
-          <SkillCard  key={item} skill={item}/>
+          <SkillCard 
+            skill={item.name}
+            onPress={()=>handleRemoveSkill(item.id)}
+            />
         )}
        />
        
